@@ -13,8 +13,8 @@
   <p>If it doesn’t open, <a id="manualLink" href="#">click here</a>.</p>
 
   <script>
-    const iOSUniversalLink = "https://yourdomain.com/open-app"; 
-    const androidIntentLink = "intent://open#Intent;scheme=myapp;package=com.hfcommercialbank.mb.individual.prd;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.hfcommercialbank.mb.individual.prd;end";
+    const iOSDeeplinksLink = "shortcuts://open-shortcut?name=MyShortcut"; 
+    const androidDeeplinksLink = "intent://open#Intent;scheme=myapp;package=com.hfcommercialbank.mb.individual.prd;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.hfcommercialbank.mb.individual.prd;end";
     const iOSStore = "https://apps.apple.com/kh/app/hfcb-mobile/id1638841769";
     const androidStore = "https://play.google.com/store/apps/details?id=com.hfcommercialbank.mb.individual.prd";
 
@@ -42,18 +42,18 @@
         const start = Date.now();
 
         if (isAndroid()) {
-            window.location = androidIntentLink;
+            window.location = androidDeeplinksLink;
             setTimeout(() => {
                 if (Date.now() - start < 2000) window.location = androidStore;
             }, 1500);
-            document.getElementById('manualLink').href = androidIntentLink;
+            document.getElementById('manualLink').href = androidDeeplinksLink;
 
         } else if (isIOS()) {
-            window.location = iOSUniversalLink;
+            window.location = iOSDeeplinksLink;
             setTimeout(() => {
                 if (Date.now() - start < 2000) window.location = iOSStore;
             }, 1500);
-            document.getElementById('manualLink').href = iOSUniversalLink;
+            document.getElementById('manualLink').href = iOSDeeplinksLink;
 
         } else {
             document.getElementById('manualLink').href = "#";
