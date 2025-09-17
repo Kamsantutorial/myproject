@@ -18,7 +18,7 @@
     const iOSStore = "https://apps.apple.com/kh/app/hfcb-mobile/id1638841769";
     const androidStore = "https://play.google.com/store/apps/details?id=com.hfcommercialbank.mb.individual.prd";
 
-    // Robust device detection
+    // Detect device
     function isIOS() {
         return ['iPad','iPhone','iPod'].some(d => navigator.platform.includes(d)) || 
                (navigator.userAgent.includes("Mac") && "ontouchend" in document);
@@ -27,7 +27,7 @@
         return /Android/i.test(navigator.userAgent);
     }
 
-    // Display device OS
+    // Show device type
     const deviceText = document.getElementById('deviceText');
     if (isAndroid()) {
         deviceText.textContent = "Device detected: Android";
@@ -37,8 +37,8 @@
         deviceText.textContent = "Device detected: Other/Unknown";
     }
 
-    // Open app on button click
-    document.getElementById('openAppButton').addEventListener('click', function() {
+    // Open app function
+    function openApp() {
         const start = Date.now();
 
         if (isAndroid()) {
@@ -46,19 +46,30 @@
             setTimeout(() => {
                 if (Date.now() - start < 2000) window.location = androidStore;
             }, 1500);
-            document.getElementById('manualLink').href = androidDeeplinksLink;
+            document.getElementById('manualLink').href = androidStore;
 
         } else if (isIOS()) {
-            window.location = iOSDeeplinksLink;
+            // iOS iframe trick
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = iOSDeeplinksLink;
+            document.body.appendChild(iframe);
+
             setTimeout(() => {
                 if (Date.now() - start < 2000) window.location = iOSStore;
             }, 1500);
-            document.getElementById('manualLink').href = iOSDeeplinksLink;
+            document.getElementById('manualLink').href = iOSStore;
 
         } else {
             document.getElementById('manualLink').href = "#";
         }
-    });
+    }
+
+    // Button click
+    document.getElementById('openAppButton').addEventListener('click', openApp);
+
+    // Optional: auto open app when page loads
+    // window.onload = openApp;
   </script>
 </body>
 </html>
