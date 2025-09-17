@@ -3,22 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Open Designers App</title>
+  <title>Open Google Maps</title>
 </head>
 <body>
-  <h2>Open Designers App</h2>
+  <h2>Open Google Maps</h2>
   <p id="deviceText">Detecting device...</p>
-  <p>Tap the button below to open the app:</p>
-  <button id="openAppButton">Open App</button>
+  <button id="openMapButton">Open Maps</button>
   <p>If it doesn’t open, <a id="manualLink" href="#">click here</a>.</p>
 
   <script>
-    const iOSDeeplinksLink = "shortcuts1://open-shortcut?name=MyShortcut"; 
-    const androidDeeplinksLink = "intent://open#Intent;scheme=myapp;package=com.hfcommercialbank.mb.individual.prd;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.hfcommercialbank.mb.individual.prd;end";
-    const iOSStore = "https://apps.apple.com/kh/app/hfcb-mobile/id1638841769";
-    const androidStore = "https://play.google.com/store/apps/details?id=com.hfcommercialbank.mb.individual.prd";
+    // Coordinates / query for Google Maps
+    const latitude = 37.7749;
+    const longitude = -122.4194;
+    const queryAddress = "1600+Amphitheatre+Parkway,+Mountain+View,+CA";
 
-    // Detect device
+    // Deeplinks and store URLs
+    const iOSDeeplinksLink = `comgooglemaps://?q=${queryAddress}`;
+    const iOSStore = "https://apps.apple.com/app/id585027354"; // Google Maps iOS App Store
+    const androidDeeplinksLink = `intent://0,0?q=${queryAddress}#Intent;scheme=geo;package=com.google.android.apps.maps;S.browser_fallback_url=https%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2F%3Fapi%3D1%26query%3D${queryAddress};end`;
+    const androidStore = "https://play.google.com/store/apps/details?id=com.google.android.apps.maps";
+
+    // Device detection
     function isIOS() {
         return ['iPad','iPhone','iPod'].some(d => navigator.platform.includes(d)) || 
                (navigator.userAgent.includes("Mac") && "ontouchend" in document);
@@ -27,49 +32,45 @@
         return /Android/i.test(navigator.userAgent);
     }
 
-    // Show device type
+    // Show device
     const deviceText = document.getElementById('deviceText');
-    if (isAndroid()) {
-        deviceText.textContent = "Device detected: Android";
-    } else if (isIOS()) {
-        deviceText.textContent = "Device detected: iOS";
-    } else {
-        deviceText.textContent = "Device detected: Other/Unknown";
-    }
+    if (isAndroid()) deviceText.textContent = "Device detected: Android";
+    else if (isIOS()) deviceText.textContent = "Device detected: iOS";
+    else deviceText.textContent = "Device detected: Other/Unknown";
 
-    // Open app function
-    function openApp() {
+    // Open Google Maps
+    function openMaps() {
         const start = Date.now();
 
-        if (isAndroid()) {
-            window.location = androidDeeplinksLink;
-            setTimeout(() => {
-                if (Date.now() - start < 2000) window.location = androidStore;
-            }, 1500);
-            document.getElementById('manualLink').href = androidStore;
-
-        } else if (isIOS()) {
-            // iOS iframe trick
+        if (isIOS()) {
+            // Open Google Maps via scheme
             const iframe = document.createElement('iframe');
             iframe.style.display = 'none';
             iframe.src = iOSDeeplinksLink;
             document.body.appendChild(iframe);
 
+            // Redirect to App Store if app not installed
             setTimeout(() => {
                 if (Date.now() - start < 2000) window.location = iOSStore;
             }, 1500);
+
             document.getElementById('manualLink').href = iOSStore;
 
+        } else if (isAndroid()) {
+            window.location = androidDeeplinksLink;
+
+            // Android intent:// automatically falls back to browser/fallback URL
+            document.getElementById('manualLink').href = androidStore;
+
         } else {
-            document.getElementById('manualLink').href = "#";
+            // Other devices
+            document.getElementById('manualLink').href = `https://www.google.com/maps/search/?api=1&query=${queryAddress}`;
         }
     }
 
-    // Button click
-    document.getElementById('openAppButton').addEventListener('click', openApp);
-
-    // Optional: auto open app when page loads
-    // window.onload = openApp;
+    document.getElementById('openMapButton').addEventListener('click', openMaps);
+    // Optional: auto-open on page load
+    // window.onload = openMaps;
   </script>
 </body>
 </html>
