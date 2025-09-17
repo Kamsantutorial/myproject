@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open Designers App</title>
+</head>
+<body>
+  <h2>Open Designers App</h2>
+  <p id="deviceText">Detecting device...</p>
+  <p>Tap the button below to open the app:</p>
+  <button id="openAppButton">Open App</button>
+  <p>If it doesn’t open, <a id="manualLink" href="#">click here</a>.</p>
+
+  <script>
+    const iOSUniversalLink = "https://yourdomain.com/open-app"; 
+    const androidIntentLink = "intent://open#Intent;scheme=myapp;package=com.hfcommercialbank.mb.individual.prd;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.hfcommercialbank.mb.individual.prd;end";
+    const iOSStore = "https://apps.apple.com/kh/app/hfcb-mobile/id1638841769";
+    const androidStore = "https://play.google.com/store/apps/details?id=com.hfcommercialbank.mb.individual.prd";
+
+    // Robust device detection
+    function isIOS() {
+        return ['iPad','iPhone','iPod'].some(d => navigator.platform.includes(d)) || 
+               (navigator.userAgent.includes("Mac") && "ontouchend" in document);
+    }
+    function isAndroid() {
+        return /Android/i.test(navigator.userAgent);
+    }
+
+    // Display device OS
+    const deviceText = document.getElementById('deviceText');
+    if (isAndroid()) {
+        deviceText.textContent = "Device detected: Android";
+    } else if (isIOS()) {
+        deviceText.textContent = "Device detected: iOS";
+    } else {
+        deviceText.textContent = "Device detected: Other/Unknown";
+    }
+
+    // Open app on button click
+    document.getElementById('openAppButton').addEventListener('click', function() {
+        const start = Date.now();
+
+        if (isAndroid()) {
+            window.location = androidIntentLink;
+            setTimeout(() => {
+                if (Date.now() - start < 2000) window.location = androidStore;
+            }, 1500);
+            document.getElementById('manualLink').href = androidIntentLink;
+
+        } else if (isIOS()) {
+            window.location = iOSUniversalLink;
+            setTimeout(() => {
+                if (Date.now() - start < 2000) window.location = iOSStore;
+            }, 1500);
+            document.getElementById('manualLink').href = iOSUniversalLink;
+
+        } else {
+            document.getElementById('manualLink').href = "#";
+        }
+    });
+  </script>
+</body>
+</html>
