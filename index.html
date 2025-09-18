@@ -20,7 +20,7 @@
     // Deeplinks and store URLs
     const iOSDeeplinksLink = `comgooglemaps://?q=${queryAddress}`;
     const iOSStore = "https://apps.apple.com/app/id585027354"; // Google Maps iOS App Store
-    const androidDeeplinksLink = `intent://0,0?q=${queryAddress}#Intent;scheme=geo;package=com.google.android.apps.maps;S.browser_fallback_url=https%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2F%3Fapi%3D1%26query%3D${queryAddress};end`;
+    const androidDeeplinksLink = `comgooglemaps://0,0?q=${queryAddress}#Intent;scheme=geo;package=com.google.android.apps.maps;S.browser_fallback_url=https%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2F%3Fapi%3D1%26query%3D${queryAddress};end`;
     const androidStore = "https://play.google.com/store/apps/details?id=com.google.android.apps.maps";
 
     // Device detection
